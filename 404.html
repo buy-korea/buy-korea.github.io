@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>Buy Korea Coffee</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Buy Korea Coffee</a>
+    <div class="auth-actions">
+      <span id="user-label" class="muted"></span>
+      <button id="login-button" class="button secondary">Sign in with Google</button>
+      <button id="logout-button" class="button secondary hidden">Sign out</button>
+    </div>
+  </header>
+  <main class="page-shell">
+    <section id="home-view" class="hidden">
+      <div id="product-grid" class="product-grid"></div>
+      <div id="empty-state" class="empty-state hidden"></div>
+    </section>
+    <section id="product-view">
+      <a href="/" class="back-link">← Back to products</a>
+      <div id="product-detail" class="product-detail"></div>
+    </section>
+    <section id="status-view" class="status-box hidden" aria-live="polite"></section>
+  </main>
+  <footer class="site-footer">
+    <span>Secure checkout powered by PayPal.</span>
+    <a href="/admin/">Admin</a>
+  </footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
