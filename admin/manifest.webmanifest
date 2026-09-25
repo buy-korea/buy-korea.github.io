@@ -1,12 +1,12 @@
 {
-  "name": "Buy Korea Coffee Admin",
-  "short_name": "Coffee Admin",
+  "name": "Buy Korea Admin",
+  "short_name": "Buy Korea Admin",
   "start_url": "/admin/",
   "scope": "/admin/",
   "display": "standalone",
   "background_color": "#f6f7f5",
   "theme_color": "#0b3d2e",
-  "description": "Product and order administration for Buy Korea Coffee.",
+  "description": "Product and order administration for Buy Korea.",
   "icons": [
     {
       "src": "/icons/admin-icon.svg",
