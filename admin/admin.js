@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import {
-  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+  getAuth, signInWithCustomToken, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, setDoc, query, orderBy, limit, serverTimestamp
@@ -17,13 +17,12 @@ const firebaseApp = initializeApp(CONFIG.firebase);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
-const googleProvider = new GoogleAuthProvider();
 
 const accessPanel = document.querySelector("#access-panel");
 const accessMessage = document.querySelector("#access-message");
+const loginForm = document.querySelector("#admin-login-form");
 const adminConsole = document.querySelector("#admin-console");
 const adminUser = document.querySelector("#admin-user");
-const loginButton = document.querySelector("#admin-login");
 const logoutButton = document.querySelector("#admin-logout");
 const form = document.querySelector("#product-form");
 const productMessage = document.querySelector("#product-message");
@@ -118,6 +117,34 @@ async function loadOrders() {
   });
 }
 
+loginForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  accessMessage.textContent = "Signing in…";
+
+  try {
+    const username = document.querySelector("#admin-id").value.trim();
+    const password = document.querySelector("#admin-password").value;
+
+    const response = await fetch(`${CONFIG.apiBaseUrl}/api/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const payload = await response.json();
+    if (!response.ok || !payload.token) {
+      throw new Error(payload.error || "Invalid administrator credentials.");
+    }
+
+    document.querySelector("#admin-password").value = "";
+    await signInWithCustomToken(auth, payload.token);
+    accessMessage.textContent = "";
+  } catch (error) {
+    console.error(error);
+    accessMessage.textContent = error.message || "Sign-in failed.";
+  }
+});
+
 document.querySelector("#product-name").addEventListener("input", event => {
   const slugInput = document.querySelector("#product-slug");
   if (!slugInput.dataset.touched) slugInput.value = slugify(event.target.value);
@@ -198,27 +225,22 @@ notificationButton.addEventListener("click", async () => {
   }
 });
 
-loginButton.addEventListener("click", () => signInWithPopup(auth, googleProvider));
 logoutButton.addEventListener("click", () => signOut(auth));
 
 onAuthStateChanged(auth, async user => {
-  adminUser.textContent = user ? (user.displayName || user.email || "Signed in") : "";
-  loginButton.classList.toggle("hidden", Boolean(user));
+  adminUser.textContent = user ? "Administrator" : "";
   logoutButton.classList.toggle("hidden", !user);
 
   if (!user) {
     adminConsole.classList.add("hidden");
     accessPanel.classList.remove("hidden");
-    accessMessage.textContent = "Not signed in.";
     return;
   }
 
   try {
     if (!(await isAdmin(user.uid))) {
-      adminConsole.classList.add("hidden");
-      accessPanel.classList.remove("hidden");
-      accessMessage.textContent = "This Google account is not authorized as an administrator.";
-      return;
+      await signOut(auth);
+      throw new Error("This account is not authorized as an administrator.");
     }
 
     accessPanel.classList.add("hidden");
@@ -226,6 +248,8 @@ onAuthStateChanged(auth, async user => {
     await Promise.all([loadProducts(), loadOrders()]);
   } catch (error) {
     console.error(error);
+    adminConsole.classList.add("hidden");
+    accessPanel.classList.remove("hidden");
     accessMessage.textContent = error.message;
   }
 });
