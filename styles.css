@@ -1,0 +1,81 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #17211d;
+  background: #f6f7f5;
+  --green: #0b3d2e;
+  --green-2: #145c45;
+  --cream: #f4efe6;
+  --line: #dfe5e1;
+  --danger: #a32929;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: #f6f7f5; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+
+.site-header {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+.brand { font-weight: 800; text-decoration: none; letter-spacing: -.02em; color: var(--green); }
+.auth-actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+
+.page-shell { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: 2rem 0 4rem; }
+.hero { background: var(--green); color: white; border-radius: 24px; padding: clamp(2rem, 6vw, 5rem); margin-bottom: 2rem; }
+.hero h1 { margin: .25rem 0 .75rem; font-size: clamp(2.2rem, 6vw, 4.5rem); line-height: .95; letter-spacing: -.05em; }
+.hero p { max-width: 650px; }
+.eyebrow { text-transform: uppercase; font-size: .78rem; letter-spacing: .14em; font-weight: 800; opacity: .75; }
+
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.25rem; }
+.product-card { background: white; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 8px 30px rgba(10,30,20,.05); }
+.product-card a { text-decoration: none; }
+.product-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: #ecefed; }
+.product-card-body { padding: 1rem; }
+.product-card h2 { margin: 0 0 .5rem; font-size: 1.05rem; }
+.price { font-size: 1.15rem; font-weight: 800; color: var(--green); }
+
+.product-detail { margin-top: 1rem; display: grid; grid-template-columns: minmax(0,1fr) minmax(300px,.8fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+.product-detail img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 24px; background: #ecefed; }
+.product-copy { background: white; border: 1px solid var(--line); border-radius: 24px; padding: 1.5rem; }
+.product-copy h1 { margin-top: 0; font-size: clamp(2rem,5vw,3.2rem); letter-spacing: -.04em; }
+.back-link { display: inline-block; margin-bottom: 1rem; color: var(--green); font-weight: 700; text-decoration: none; }
+
+.button {
+  border: 0; border-radius: 999px; padding: .75rem 1rem; cursor: pointer; font: inherit; font-weight: 800;
+  background: var(--green); color: white;
+}
+.button:hover { background: var(--green-2); }
+.button.secondary { background: white; color: var(--green); border: 1px solid var(--green); }
+.button.danger { background: var(--danger); }
+.button:disabled { opacity: .55; cursor: not-allowed; }
+
+.admin-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(300px,.9fr); gap: 1.5rem; }
+.panel { background: white; border: 1px solid var(--line); border-radius: 18px; padding: 1.25rem; }
+.panel h2 { margin-top: 0; }
+.form-grid { display: grid; gap: 1rem; }
+label { display: grid; gap: .4rem; font-weight: 700; }
+input, textarea, select {
+  width: 100%; border: 1px solid #cfd7d2; border-radius: 12px; padding: .8rem; font: inherit; background: white;
+}
+textarea { min-height: 120px; resize: vertical; }
+.product-admin-row { display: grid; grid-template-columns: 72px 1fr auto; gap: 1rem; align-items: center; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+.product-admin-row img { width: 72px; height: 72px; object-fit: cover; border-radius: 12px; background: #ecefed; }
+
+.status-box, .empty-state { margin-top: 1.25rem; padding: 1rem; border-radius: 14px; background: white; border: 1px solid var(--line); }
+.notice { padding: .9rem 1rem; border-radius: 12px; background: var(--cream); }
+.error { color: var(--danger); font-weight: 700; }
+.muted { color: #65716b; font-size: .92rem; }
+.hidden { display: none !important; }
+.site-footer { padding: 2rem clamp(1rem,4vw,4rem); display:flex; justify-content:space-between; gap:1rem; border-top:1px solid var(--line); background:white; color:#526059; }
+
+@media (max-width: 760px) {
+  .product-detail, .admin-layout { grid-template-columns: 1fr; }
+  .site-header { align-items: flex-start; }
+  .auth-actions { justify-content: flex-end; }
+  .product-admin-row { grid-template-columns: 56px 1fr; }
+  .product-admin-row .button { grid-column: 1 / -1; }
+}
