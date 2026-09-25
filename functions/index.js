@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import crypto from "node:crypto";
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
@@ -15,6 +16,10 @@ const app = express();
 const PAYPAL_CLIENT_ID = defineSecret("PAYPAL_CLIENT_ID");
 const PAYPAL_CLIENT_SECRET = defineSecret("PAYPAL_CLIENT_SECRET");
 const PAYPAL_ENV = defineSecret("PAYPAL_ENV");
+const ADMIN_USERNAME = defineSecret("ADMIN_USERNAME");
+const ADMIN_PASSWORD_SHA256 = defineSecret("ADMIN_PASSWORD_SHA256");
+
+const ADMIN_UID = "buy-korea-admin";
 
 app.use(cors({
   origin: [
@@ -29,6 +34,13 @@ function paypalBaseUrl() {
   return PAYPAL_ENV.value() === "live"
     ? "https://api-m.paypal.com"
     : "https://api-m.sandbox.paypal.com";
+}
+
+function safeEqualText(a, b) {
+  const left = Buffer.from(String(a));
+  const right = Buffer.from(String(b));
+  if (left.length !== right.length) return false;
+  return crypto.timingSafeEqual(left, right);
 }
 
 async function verifyUser(req) {
@@ -60,6 +72,36 @@ async function getProduct(productId) {
   if (product.active === false) throw new Error("Product is not available.");
   return product;
 }
+
+app.post("/api/admin/login", async (req, res) => {
+  try {
+    const username = String(req.body?.username || "");
+    const password = String(req.body?.password || "");
+
+    if (!username || !password) {
+      return res.status(400).json({ error: "Admin ID and password are required." });
+    }
+
+    const passwordHash = crypto.createHash("sha256").update(password, "utf8").digest("hex");
+    const validUser = safeEqualText(username, ADMIN_USERNAME.value());
+    const validPassword = safeEqualText(passwordHash, ADMIN_PASSWORD_SHA256.value());
+
+    if (!validUser || !validPassword) {
+      return res.status(401).json({ error: "Invalid administrator credentials." });
+    }
+
+    await db.doc(`admins/${ADMIN_UID}`).set({
+      role: "admin",
+      updatedAt: FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    const token = await getAuth().createCustomToken(ADMIN_UID, { admin: true });
+    return res.json({ token });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Administrator sign-in is unavailable." });
+  }
+});
 
 app.post("/api/paypal/create-order", async (req, res) => {
   try {
@@ -193,5 +235,11 @@ app.get("/api/health", (_req, res) => {
 
 export const api = onRequest({
   region: "us-central1",
-  secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_ENV]
+  secrets: [
+    PAYPAL_CLIENT_ID,
+    PAYPAL_CLIENT_SECRET,
+    PAYPAL_ENV,
+    ADMIN_USERNAME,
+    ADMIN_PASSWORD_SHA256
+  ]
 }, app);
