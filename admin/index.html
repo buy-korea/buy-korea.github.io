@@ -13,7 +13,6 @@
     <a class="brand" href="/">Buy Korea · Admin</a>
     <div class="auth-actions">
       <span id="admin-user" class="muted"></span>
-      <button id="admin-login" class="button secondary">Sign in with Google</button>
       <button id="admin-logout" class="button secondary hidden">Sign out</button>
     </div>
   </header>
@@ -21,7 +20,16 @@
   <main class="page-shell">
     <section id="access-panel" class="panel">
       <h1>Admin Console</h1>
-      <p>Sign in with an authorized Google account to manage products, orders and notifications.</p>
+      <p>Sign in with your Buy Korea administrator account.</p>
+      <form id="admin-login-form" class="form-grid" style="max-width:420px">
+        <label>Admin ID
+          <input id="admin-id" required autocomplete="username" />
+        </label>
+        <label>Password
+          <input id="admin-password" required type="password" autocomplete="current-password" />
+        </label>
+        <button class="button" type="submit">Sign in</button>
+      </form>
       <p id="access-message" class="muted"></p>
     </section>
 
@@ -37,7 +45,7 @@
               <input id="product-slug" required pattern="[a-z0-9-]+" placeholder="product-name" />
             </label>
             <label>Price
-              <input id="product-price" required type="number" min="0.01" step="0.01" placeholder="4.95" />
+              <input id="product-price" required type="number" min="0.01" step="0.01" placeholder="24.99" />
             </label>
             <label>Currency
               <select id="product-currency">
