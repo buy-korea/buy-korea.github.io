@@ -89,12 +89,12 @@ async function loadProduct(slug) {
   const snapshot = await getDoc(ref);
   if (!snapshot.exists() || snapshot.data().active === false) {
     productDetail.innerHTML = "<div class='notice'>This product is not available.</div>";
-    document.title = "Product not found · Buy Korea Coffee";
+    document.title = "Product not found · Buy Korea";
     return;
   }
 
   const product = snapshot.data();
-  document.title = `${product.name} · Buy Korea Coffee`;
+  document.title = `${product.name} · Buy Korea`;
   productDetail.innerHTML = `
     <img src="${escapeHtml(product.imageUrl || "")}" alt="${escapeHtml(product.name)}">
     <div class="product-copy">
