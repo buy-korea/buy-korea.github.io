@@ -1,4 +1,4 @@
-# Buy Korea Coffee
+# Buy Korea
 
 Static GitHub Pages storefront with Firebase authentication/data/storage, a Firebase Functions PayPal backend, and installable admin PWA notifications.
 
@@ -100,7 +100,7 @@ In `/admin/`:
 3. Upload a product image.
 4. Save.
 5. The customer home page reads active products from Firestore.
-6. A product saved as `caffe-latte` appears at `/caffe-latte`.
+6. A product saved as `product-name` appears at `/product-name`.
 
 ## 6. Admin notifications
 
@@ -113,7 +113,7 @@ Open `/admin/` on the administrator's phone or desktop.
 
 After a successful PayPal capture, the Firebase Function stores the order and sends a notification such as:
 
-> Alex ordered Caffè Latte.
+> Alex ordered Product Name.
 
 ## Security notes
 
