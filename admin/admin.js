@@ -122,18 +122,36 @@ loginForm.addEventListener("submit", async event => {
   accessMessage.textContent = "Signing in…";
 
   try {
+    if (!CONFIG.apiBaseUrl || CONFIG.apiBaseUrl.startsWith("REPLACE_WITH_")) {
+      throw new Error("Admin backend is not configured yet. Firebase Functions must be deployed first.");
+    }
+
     const username = document.querySelector("#admin-id").value.trim();
     const password = document.querySelector("#admin-password").value;
 
-    const response = await fetch(`${CONFIG.apiBaseUrl}/api/admin/login`, {
+    const response = await fetch(`${CONFIG.apiBaseUrl.replace(/\/$/, "")}/api/admin/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
 
-    const payload = await response.json();
-    if (!response.ok || !payload.token) {
-      throw new Error(payload.error || "Invalid administrator credentials.");
+    const contentType = response.headers.get("content-type") || "";
+    let payload = null;
+
+    if (contentType.includes("application/json")) {
+      payload = await response.json();
+    } else {
+      const body = await response.text();
+      console.error("Unexpected admin API response", {
+        status: response.status,
+        contentType,
+        body: body.slice(0, 300)
+      });
+      throw new Error("Admin API returned a web page instead of JSON. Check the Firebase Functions URL.");
+    }
+
+    if (!response.ok || !payload?.token) {
+      throw new Error(payload?.error || "Invalid administrator credentials.");
     }
 
     document.querySelector("#admin-password").value = "";
