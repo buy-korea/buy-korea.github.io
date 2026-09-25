@@ -4,13 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b3d2e" />
-  <title>Admin · Buy Korea Coffee</title>
+  <title>Admin · Buy Korea</title>
   <link rel="manifest" href="/admin/manifest.webmanifest" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="/">Buy Korea Coffee · Admin</a>
+    <a class="brand" href="/">Buy Korea · Admin</a>
     <div class="auth-actions">
       <span id="admin-user" class="muted"></span>
       <button id="admin-login" class="button secondary">Sign in with Google</button>
@@ -31,10 +31,10 @@
           <h2>Add or update product</h2>
           <form id="product-form" class="form-grid">
             <label>Product name
-              <input id="product-name" required maxlength="100" placeholder="Caffè Latte" />
+              <input id="product-name" required maxlength="100" placeholder="Product name" />
             </label>
             <label>URL slug
-              <input id="product-slug" required pattern="[a-z0-9-]+" placeholder="caffe-latte" />
+              <input id="product-slug" required pattern="[a-z0-9-]+" placeholder="product-name" />
             </label>
             <label>Price
               <input id="product-price" required type="number" min="0.01" step="0.01" placeholder="4.95" />
