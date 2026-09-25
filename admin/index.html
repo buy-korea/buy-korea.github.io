@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b3d2e" />
+  <title>Admin · Buy Korea Coffee</title>
+  <link rel="manifest" href="/admin/manifest.webmanifest" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Buy Korea Coffee · Admin</a>
+    <div class="auth-actions">
+      <span id="admin-user" class="muted"></span>
+      <button id="admin-login" class="button secondary">Sign in with Google</button>
+      <button id="admin-logout" class="button secondary hidden">Sign out</button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section id="access-panel" class="panel">
+      <h1>Admin Console</h1>
+      <p>Sign in with an authorized Google account to manage products, orders and notifications.</p>
+      <p id="access-message" class="muted"></p>
+    </section>
+
+    <section id="admin-console" class="hidden">
+      <div class="admin-layout">
+        <div class="panel">
+          <h2>Add or update product</h2>
+          <form id="product-form" class="form-grid">
+            <label>Product name
+              <input id="product-name" required maxlength="100" placeholder="Caffè Latte" />
+            </label>
+            <label>URL slug
+              <input id="product-slug" required pattern="[a-z0-9-]+" placeholder="caffe-latte" />
+            </label>
+            <label>Price
+              <input id="product-price" required type="number" min="0.01" step="0.01" placeholder="4.95" />
+            </label>
+            <label>Currency
+              <select id="product-currency">
+                <option value="USD">USD</option>
+                <option value="KRW">KRW</option>
+              </select>
+            </label>
+            <label>Description
+              <textarea id="product-description" placeholder="Product description"></textarea>
+            </label>
+            <label>Product image
+              <input id="product-image" type="file" accept="image/*" />
+            </label>
+            <label>
+              <span>Availability</span>
+              <select id="product-active">
+                <option value="true">Active</option>
+                <option value="false">Hidden</option>
+              </select>
+            </label>
+            <button class="button" type="submit">Save product</button>
+          </form>
+          <p id="product-message" class="muted"></p>
+        </div>
+
+        <div class="panel">
+          <h2>Notifications</h2>
+          <p>Install this admin page as a web app, then enable notifications once.</p>
+          <button id="enable-notifications" class="button">Enable order notifications</button>
+          <p id="notification-message" class="muted"></p>
+
+          <hr style="border:0;border-top:1px solid #dfe5e1;margin:1.5rem 0">
+
+          <h2>Products</h2>
+          <div id="admin-product-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.5rem">
+        <h2>Recent orders</h2>
+        <div id="order-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>
